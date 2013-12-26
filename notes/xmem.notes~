@@ -1,0 +1,29 @@
+############################################
+###    new XDCR protocol design notes    ###
+############################################
+
+Gloal: the new protocol will allow XDCR on the source side directly talk to memcached at destination side, bypassing all ns_server:capi_replication layer relay. The majority reason is to boost replication performance.
+
+
+High-level design
+
+At source side, we will keep current XDCR architecture, but will replace the communication layer with a new service to issue getMeta, setMeta and deleteMeta to memcached layer at remote node.
+
+Each vb replicator will start a new gen_server, namely, xdc_vb_rep_memcached, which is responsible for all task talking to remote  memcached. The server starts when vb repllicator starts up and collect
+all information needed to talk to remote memcached. Tentatively such information should be retrieved by remote_cluster_info along with the vbucket map.
+
+The lifetime of xdc_vb_rep_memcached should be same as the throttle process.
+
+
+At Stage 1, without support from ep_engine,  source will retrieve the metadata from remote memcached and conduct local conflict resolution.
+
+
+At Stage 2, we will introduce a set of new memcached command
+   *) getMetaList(List of keys): return a list of metadata fro list of keys
+   *) getMetaList() with conflict resolution
+        getMetaList(list of keys with its metadata): return a list of keys winning the conflict resolution
+   *) setMetaList(list of keys with metadata): upate list of docs with metadata
+
+
+
+

@@ -1,0 +1,26 @@
+# work as buildbot
+sudo su - buildbot
+
+# check if couchbase server is installed
+rpm -q couchbase-server
+
+# location of couchbsae server
+cd /opt/couchbase/
+
+# get RPM
+wget http://builds.hq.northscale.net/latestbuilds/couchbase-server-community_x86_64_2.0.0-1196-rel.rpm
+
+# make backup
+mv /opt/couchbase /opt/couchbase.bak
+
+# install rpm
+rpm -i couchbase-server-community_x86_64_2.0.0-1196-rel.rpm
+
+#start and stop coucbase sever
+/etc/init.d/couchbase-server stop
+/etc/init.d/couchbase-server start
+
+
+
+
+

@@ -1,0 +1,10 @@
+%% set a ns_server parameter
+curl -X POST http://Administrator:asdasd@127.0.0.1:9000/diag/eval -d 'rpc:call(node(), ns_config, set, [xdcr_checkpoint_interval, 12345]).'
+%% get a ns_server parameter
+curl -X POST http://Administrator:asdasd@127.0.0.1:9000/diag/eval -d 'rpc:call(node(), ns_config, search, [xdcr_checkpoint_interval]).'
+
+
+
+%% set erlang parameter
+wget -O- --user=Administrator --password=asdasd --post-data='erlang:system_flag(multi_scheduling, block), erlang:system_flag(multi_scheduling, unblock).' http://127.0.0.1:9000/diag/eval
+

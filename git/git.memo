@@ -1,0 +1,57 @@
+#clone manifest
+repo init -u git://github.com/membase/manifest.git -m <branch_name>
+repo sync
+
+
+# compare with index
+git diff mc-kvstore.hh
+# compare with last commit in local repository
+git diff HEAD mc-kvstore.hh
+# add files to index
+git add .
+
+git status
+
+git rm mc-kvstore/mc-engine
+git rm --cache kvstore.back1.cc
+
+# re-commit
+git commit --amend
+git rebase HEAD^
+
+git reset -help
+
+# push to gerrit
+git push gerrit HEAD:refs/for/master
+git pull couchbase HEAD:master
+git rebase master
+git log
+git reset HEAD couch-kvstore/couch-kvstore.cc
+
+
+# create gerrit alias
+git remote add gerrit ssh://review.membase.org:29418/ep-engine.git
+
+# push to gerrit -- master branch
+git push gerrit HEAD:refs/for/master
+
+# push to gerrit -- other branch like 1.8.1
+git push gerrit HEAD:refs/for/branch-181
+
+# check single commit
+git log -1 -p e00d06df8125e2718a770e1aff1d937c63413d3b
+
+# remove an existent commit A, without commit the new change set B ("revert A")
+git revert --no-commit e00d06df8125e2718a770e1aff1d937c63413d3b
+# we can stash B to restore A
+git stash
+# put B back to remove A
+git stash pop
+
+
+# Pulling in a single commit would be a cherry-pick and
+# would rewrite the commit ID (and mark you as the committer while retaining the author).
+# The process is pretty straightforward, though
+git fetch git://github.com/membase/ns_server.git
+git cherry-pick <SHA-COMMIT-ID>
+

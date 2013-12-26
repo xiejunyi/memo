@@ -1,0 +1,33 @@
+%% get replication id
+curl -s -X GET -u Administrator:password http://10.3.121.119:8091/pools/default/tasks
+
+[
+  {
+    "type": "rebalance",
+    "status": "notRunning"
+  },
+  {
+    "cancelURI": "\/controller\/cancelXDCR\/def03dbf5e968a47309194ebe052ed21%2Fdefault%2Fdefault",
+    "settingsURI": "\/settings\/replications\/def03dbf5e968a47309194ebe052ed21%2Fdefault%2Fdefault",
+    "status": "running",
+    "replicationType": "xmem",
+    "id": "def03dbf5e968a47309194ebe052ed21\/default\/default",
+    "source": "default",
+    "target": "\/remoteClusters\/def03dbf5e968a47309194ebe052ed21\/buckets\/default",
+    "continuous": true,
+    "type": "xdcr",
+    "recommendedRefreshPeriod": 10,
+    "changesLeft": 0,
+    "docsChecked": 499987,
+    "docsWritten": 499987,
+    "errors": [
+
+    ]
+  }
+]
+
+
+%% Use the replication id above, get the stats docs_opt_repd (last 60 samples)
+%% http://10.3.121.119:8091/pools/default/buckets/[src_bucket_name]/stats/replications%2f[rep_id]%2f[src_bucket_name]%2f[dest_bucket_name]%2f[stat_name]
+
+curl -s -X GET -u Administrator:password Administrator:password http://10.3.121.119:8091/pools/default/buckets/default/stats/replications%2fdef03dbf5e968a47309194ebe052ed21%2fdefault%2fdefault%2fdocs_opt_repd

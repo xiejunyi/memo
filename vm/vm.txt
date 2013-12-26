@@ -1,0 +1,13 @@
+## stop and start couchbase server
+sudo /etc/init.d/couchbase-server stop
+sudo /etc/init.d/couchbase-server start
+sudo /etc/init.d/couchbase-server restart
+
+#if need to change env parameter, do NOT use sudo, instead
+## login as root and use 
+XDCR_WORKER_BATCH_SIZE=500 XDCR_CONNECTION_TIMEOUT=120 /etc/init.d/couchbase-server start
+
+
+## execute a shell command on all vms
+python scripts/ssh.py -i xdcr.ini "/etc/init.d/couchbase-server stop"
+python scripts/ssh.py -i xdcr.ini "XDCR_WORKER_BATCH_SIZE=500 XDCR_CONNECTION_TIMEOUT=120 /etc/init.d/couchbase-server start"

@@ -1,0 +1,11 @@
+1. EVENTUALLY CONSISTENT  - BUILDING RELIABLE DISTRIBUTED SYSTEMS AT A WORLDWIDE SCALE DEMANDS TRADE-OFFS—BETWEEN CONSISTENCY AND AVAILABILITY.  WERNER VOGELS, AMAZON.COM
+http://queue.acm.org/detail.cfm?id=1466448
+
+2. Brewer, E. A. 2000. Towards robust distributed systems (abstract). In Proceedings of the 19th Annual ACM Symposium on Principles of Distributed Computing (July 16-19, Portland, Oregon):
+
+3. A Conversation with Bruce Lindsay. 2004. ACM Queue 2(8): 22-33.
+
+4. DeCandia, G., Hastorun, D., Jampani, M., Kakulapati, G., Lakshman, A., Pilchin, A., Sivasubramanian, S., Vosshall, P., Vogels, W. 2007. Dynamo: Amazon's highly available key-value store. In Proceedings of the 21st ACM Symposium on Operating Systems Principles (Stevenson, Washington, October).
+Gilbert , S., Lynch, N. 2002. Brewer's conjecture and the feasibility of consistent, available, partition-tolerant Web services. ACM SIGACT News 33(2).
+Lindsay, B. G., Selinger, P. G., et al. 1980. Notes on distributed databases. In Distributed Data Bases, ed. I. W. Draffan and F. Poole, 247-284. Cambridge: Cambridge University Press. Also available as IBM Research Report RJ2517, San Jose, California (July 1979).
+

@@ -1,0 +1,25 @@
+# linux machines
+ssh junyie@10.2.1.50
+ssh junyie@10.2.1.54
+
+# webconsole - cluster_run
+http://10.2.1.50:9000/index.html
+# webconsole - RPM (production sys.)
+http://10.1.3.202:8091/index.html
+
+# add more servers:
+10.2.1.50:9001
+10.2.1.50:9002
+10.2.1.50:9003
+...
+
+# smaller number of vbuckets, speed up rebalancing (default: 1024)
+make dataclean; COUCHBASE_NUM_VBUCKETS=64 python ./cluster_run -n2
+
+
+# load data using memcachetest:
+# look at port moxi listen to, if it is 12002,
+./memcachetest -h localhost:12002 -i5000000  -t1 -K junyi -m 200 -M 500
+
+
+

@@ -1,0 +1,9 @@
+1. new protocol to make XDCR talk to memcached
+
+
+
+2. More adaptive XDCR
+Today source XDCR cluster dump data to remote as much as it can, without considering the capacity at destination side. If destination clusters are uanbel to catch up with source, lots of timeout may be seen. In this case, today source replicators just crashed, and restarted after 30 seconds. No adaptive throttl at the source to flush less data to remote. Need to make XDCR more adaptive, e.g.,
+of destination is unable to handle flooding data, the source should be notfiiedand take some action to reduce unnecessary vb replicator crash/restart. In stead, the source and reduce # of available of tokens, or even better, reduce # of outbound replications to the node which is already overloaded.
+
+The new protocol requires some feedback mechanism from destination back to source.

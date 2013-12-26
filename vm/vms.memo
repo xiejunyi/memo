@@ -1,0 +1,6 @@
+
+# kill, stop and restart couchbase server on vm
+killall -9 memcached
+/etc/init.d/couchbase-server stop
+/etc/init.d/couchbase-server start
+

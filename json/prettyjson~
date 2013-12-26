@@ -1,0 +1,27 @@
+Junyis-MacBook-Pro:temp junyi$ cat raw.json | python -mjson.tool
+[
+    {
+        "status": "notRunning", 
+        "type": "rebalance"
+    }, 
+    {
+        "cancelURI": "/controller/cancelXDCR/def03dbf5e968a47309194ebe052ed21%2Fdefault%2Fdefault", 
+        "changesLeft": 0, 
+        "continuous": true, 
+        "docsChecked": 499987, 
+        "docsWritten": 499987, 
+        "errors": [], 
+        "id": "def03dbf5e968a47309194ebe052ed21/default/default", 
+        "recommendedRefreshPeriod": 10.0, 
+        "replicationType": "xmem", 
+        "settingsURI": "/settings/replications/def03dbf5e968a47309194ebe052ed21%2Fdefault%2Fdefault", 
+        "source": "default", 
+        "status": "running", 
+        "target": "/remoteClusters/def03dbf5e968a47309194ebe052ed21/buckets/default", 
+        "type": "xdcr"
+    }
+]
+Junyis-MacBook-Pro:temp junyi$ cat raw 
+[{"type":"rebalance","status":"notRunning"},{"cancelURI":"/controller/cancelXDCR/def03dbf5e968a47309194ebe052ed21%2Fdefault%2Fdefault","settingsURI":"/settings/replications/def03dbf5e968a47309194ebe052ed21%2Fdefault%2Fdefault","status":"running","replicationType":"xmem","id":"def03dbf5e968a47309194ebe052ed21/default/default","source":"default","target":"/remoteClusters/def03dbf5e968a47309194ebe052ed21/buckets/default","continuous":true,"type":"xdcr","recommendedRefreshPeriod":10.0,"changesLeft":0,"docsChecked":499987,"docsWritten":499987,"errors":[]}]Junyis-MacBook-Pro:temp junyi$ 
+
+

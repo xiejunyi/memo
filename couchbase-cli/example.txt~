@@ -1,0 +1,15 @@
+## create a remote cluster reference "RemoteCluster":
+python couchbase-cli xdcr-setup -c 10.3.121.121:8091 -u Administrator  -p password --create --xdcr-cluster-name=RemoteCluster  --xdcr-hostname=10.3.121.123:8091 --xdcr-username=Administrator  --xdcr-password=password
+SUCCESS: init RemoteCluster
+
+
+## start XDCR replication in XMEM mode to remote cluster "RemoteCluster"
+python couchbase-cli xdcr-replicate -c 10.3.121.121:8091 -u Administrator -p password --xdcr-cluster-name RemoteCluster --xdcr-from-bucket default --xdcr-to-bucket backup
+OR
+python couchbase-cli xdcr-replicate -c 10.3.121.121:8091 -u Administrator -p password --xdcr-cluster-name RemoteCluster --xdcr-from-bucket default --xdcr-to-bucket backup --xdcr-replication-mode xmem
+
+
+
+## start XDCR replication in XMEM mode to remote cluster "RemoteCluster"
+python couchbase-cli xdcr-replicate -c 10.3.121.121:8091 -u Administrator -p password --xdcr-cluster-name RemoteCluster --xdcr-from-bucket default --xdcr-to-bucket backup --xdcr-replication-mode capi
+

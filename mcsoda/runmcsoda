@@ -1,0 +1,7 @@
+## create and load new items
+lib/perf_engines/mcsoda.py localhost:12001 doc-gen=0 doc-cache=0 ratio-creates=1 ratio-sets=1 ratio-deletes=0 min-value-size=1,3 max-items=500000 exit-after-creates=1 prefix=XDCR 
+
+
+
+
+

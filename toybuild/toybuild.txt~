@@ -1,0 +1,15 @@
+## add below in .git/config file (ep-engine project for example)
+[remote "xiejunyi"]
+    url = git@github.com:xiejunyi/ep-engine.git
+	projectname = ep-engine
+	fetch = +refs/heads/*:refs/remotes/xiejunyi/*
+
+
+# if you are on local toy branch and want to push it to your github toy
+# branch (same branch name), need enter username and password
+git push https://github.com/xiejunyi/ns_server.git  HEAD
+
+## push to a different branch at remote
+## local branch: jinlim
+## remote branch: 2.0.1
+git push xiejunyi jinlim:2.0.1

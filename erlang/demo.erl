@@ -1,0 +1,12 @@
+% test erlang code
+
+-module(demo).
+-export([double/1]).
+
+% this is my first erlang function
+double(Val) ->
+  times(Val, 2).
+
+times(Val, Y) ->
+  Val*Y.
+

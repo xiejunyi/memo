@@ -1,0 +1,22 @@
+# go to ./ep-engine/management
+# in python environment
+
+import mc_bin_client as mc
+
+m = mc.MemcachedClient("localhost", 12002)
+m.set("k1", 0, 0, "v1")
+m = mc.MemcachedClient("localhost", 12002)
+m.set("k1", 0, 0, "v1")
+m = mc.MemcachedClient("localhost", 12000)
+m.set("k1", 0, 0, "v1")
+m = mc.MemcachedClient("localhost", 12002)
+m.get("k1")
+m.get('k1')
+m.set('k1', 0, 0, 'v1')
+m = mc.MemcachedClient("localhost", 12002)
+m.set("k1", 0, 0, "v1")
+m.get("k1")
+m.delete('k1')
+h
+history
+

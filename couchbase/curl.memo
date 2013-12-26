@@ -1,0 +1,21 @@
+# check if couchdb is live
+curl http://localhost:9500
+{"couchdb":"Welcome","version":"1.2.0a-9535247-git","couchbase":"1.8.1r_1452_gfbf264b"}
+
+# fetch all docs from bucket named "default"
+curl -X GET 'http://localhost:9500/default/_all_docs'
+
+# fetch single doc with key "CA1" from bucket "default"
+curl -g -X GET 'http://localhost:9500/default/_all_docs?key="CA1"'
+
+# fetch multiple docs with keys, note no space between keys in []
+curl -g -X GET 'http://localhost:9500/default/_all_docs?keys=["CA0","CA1"]'
+
+
+
+# not verified
+curl -g -X GET 'http://localhost:9500/default/_changes'
+curl -g -X GET http://localhost:9000/couchbaseapi/default/_changes
+curl -X GET http://localhost:9000/default/pools/buckets/default
+
+curl -X GET http://localhost:9500/bucket-0/_all_docs > a2

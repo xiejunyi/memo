@@ -1,0 +1,7 @@
+## work around the time out issue in memcachetest, making memcachetest bypass moxi
+memcachetest -h127.0.0.1:12000 -i1000000 -c100000 -C 127.0.0.1:9000 -L2
+
+## using mcsoda to generate worload, no time out
+./testrunner/pytests/performance/mcsoda.py 127.0.0.1:12000 ratio-sets=1.0 ratio-creates=1.0 doc-gen=0
+
+

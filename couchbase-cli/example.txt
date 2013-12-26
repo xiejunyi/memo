@@ -1,0 +1,19 @@
+Item 4 is here:
+
+Compared with 2.1, in 2.2, couchbase-cli introduces a new option --xdcr-replication-mode to allow users to choose different mode of replication. The default value is xmem, mapping to "Version 2" on UI.   Users can also choose to use "capi" mode ("Version 1" on UI) when creating replications.
+
+Here are examples:
+
+
+## create a remote cluster reference "RemoteCluster":
+python couchbase-cli xdcr-setup -c 10.3.121.121:8091 -u Administrator  -p password --create --xdcr-cluster-name=RemoteCluster  --xdcr-hostname=10.3.121.123:8091 --xdcr-username=Administrator  --xdcr-password=password
+SUCCESS: init RemoteCluster
+
+## start XDCR replication in XMEM (version 2 on UI) mode to remote cluster "RemoteCluster" by default:
+python couchbase-cli xdcr-replicate -c 10.3.121.121:8091 -u Administrator -p password --xdcr-cluster-name RemoteCluster --xdcr-from-bucket default --xdcr-to-bucket backup
+OR
+python couchbase-cli xdcr-replicate -c 10.3.121.121:8091 -u Administrator -p password --xdcr-cluster-name RemoteCluster --xdcr-from-bucket default --xdcr-to-bucket backup --xdcr-replication-mode xmem
+
+## start XDCR replication in CAPI (version 1 on UI) mode to remote cluster "RemoteCluster":
+python couchbase-cli xdcr-replicate -c 10.3.121.121:8091 -u Administrator -p password --xdcr-cluster-name RemoteCluster --xdcr-from-bucket default --xdcr-to-bucket backup --xdcr-replication-mode capi
+

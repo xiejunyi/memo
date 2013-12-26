@@ -1,0 +1,2 @@
+./testrunner -i b/resources/dev-2-nodes-xdcr.ini -t xdcr.uniXDCR.unidirectional.load_with_ops,items=10,rdirection=unidirection,ctopology=chain,expires=10,doc-ops=create-update
+

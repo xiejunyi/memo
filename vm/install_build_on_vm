@@ -1,0 +1,7 @@
+
+## install a toybuild with verion 3001
+python ./scripts/install.py -i ~/memo/vm/xmem.ini -p product=cb,version=2.0.0-3001-toy,parallel=true,vbuckets=1024,toy=junyi
+
+## install a regualr build
+python ~/work/xdcr/testrunner/scripts/install.py -i ~/memo/xdcr.ini -p product=cb,version=2.0.1-170-rel,parallel=true,vbuckets=1024
+
