@@ -1,0 +1,4 @@
+ant build ## jar
+ant rebuild  ## ant clean; ant jar;
+ant build-all  ## copyjar,copyjar-ee,copybin,copyexamples,copymib
+ant rebuild-all  ##ant  clean; ant build-all;
