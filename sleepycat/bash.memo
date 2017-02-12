@@ -1,0 +1,6 @@
+=== counting line of codes recursively ===
+find . -name '*.java' | xargs wc -l
+
+
+== check port usage ===
+lsof -n -i:$PORT | grep LISTEN

@@ -1,0 +1,27 @@
+## start admin
+java -jar /Users/junyi/work/oracle/hg/kv/kvstore/dist/lib/kvstore.jar runadmin -host slc07pnn -port 5000 -store mystore
+
+### connect store
+connect store -name mystore -host slc07pnn -port 5000
+### create table
+kv-> table create -name myTable
+myTable-> set-description  -desc "my first table"
+myTable-> add-field -type STRING -name item
+myTable-> add-field -type STRING -name description
+myTable-> add-field -type INTEGER -name count
+myTable-> add-field -type DOUBLE -name percentage
+myTable-> primary-key -field item
+myTable-> exit
+kv-> plan add-table -name myTable -wait
+
+### Evolve table after creation
+kv-> table evolve -name myTable
+myTable-> show
+myTable-> add-field -type STRING -name itemCategory
+myTable-> remove-field -name percentage
+myTable-> exit
+kv-> plan evolve-table -name myTable -wait
+
+### remove table
+kv-> plan remove-table -name t2 -wait
+

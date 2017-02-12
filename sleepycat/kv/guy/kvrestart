@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# sets KVROOT from kvenv's environment
+eval export `kvenv env | grep KVROOT`
+
+cd $KVROOT
+
+for i in config*.xml; do
+    echo starting $i
+    kvenv runjar start -root $KVROOT -config $i &
+done

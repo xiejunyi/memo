@@ -1,0 +1,298 @@
+How to use fulltext indexing in Oracle NoSQL Database.
+
+
+Text indexing provides the means to create indexes on NoSQL Database
+tables that cause the indexed fields to be fed automatically into an
+Elasticsearch cluster.  Once the data is in Elasticsearch, you may
+use any native Elasticsearch API to search and retrieve it.  The
+documents retrieved from Elasticsearch contain references back to the
+original NoSQL Database records, facilitating their retrieval.
+
+To use this feature, you must first have an Elasticsearch 2.0 cluster
+running on the local network with a NoSQL database store.  You can
+download ES here:
+https://www.elastic.co/downloads/past-releases/elasticsearch-2-0-0
+...and find installation instructions here:
+https://www.elastic.co/guide/en/elasticsearch/reference/2.0/_installation.html
+
+It is likely that later versions of ES will work with the ONDB
+integration, but we have not qualified them.
+
+When your ES cluster is running, it will consist of one or more nodes.
+Some or all of the nodes will have services listening on two ports.
+One, the HTTP port, is used for REST requests. It is 9200 by default.
+The other port is the ES transport port, which is used for
+communication between ES nodes. It is 9300 by default.  You will need
+to know the host name and transport port of at least one node in the
+cluster, and the name of the cluster itself, which by default is
+"elasticsearch".  This information will be provided to the ONDB store
+so that it can connect to the ES cluster.
+
+
+REGISTRATION
+
+
+Before you can create a text index, you must register the
+Elasticsearch cluster with the ONDB store.  This is accomplished by
+issuing the "register-es" plan command at the ODNB admin CLI client
+prompt:
+
+  plan register-es -clustername <name> -host <host> -port <transport port>
+    [ -force ]
+
+For example, to connect ONDB to a local ES node that is running with the
+default ES configuration:
+
+  kv-> plan register-es -clustername elasticsearch -host localhost -port 9300
+
+In this command you provide the ES cluster name; and the host name and
+transport port of any node in the cluster.  ONDB Admin will
+communicate with the node to verify its existence, and it will acquire
+a complete list of connection information for all the nodes in the
+cluster.  This information will be stored and distributed to all the
+nodes of the ONDB store.
+
+The optional -force argument will cause ONDB to initialize an
+Elasticsearch cluster regardless of whether it already contains an
+index corresponding to the NoSQL Database store.
+
+
+ES INDEX
+
+
+The top-level container in an Elasticsearch cluster is called an ES
+Index.  An ONDB store will create a single ES Index, and will confine
+its storage of documents within that index.  The ES index created by
+an ONDB store will be named with the string "ondb." with the ONDB
+store's name appended.  For example, if the ONDB store's name is
+"kvstore", then the name of the store's ES index will be
+"ondb.kvstore."
+
+The ES index contains mappings, which are described below.  It is
+important to know the ES index name, as you will want to provide it
+when conducting a search for the documents indexed from the ONDB store.
+
+
+FULLTEXT INDEX CREATION
+
+
+Text indexes are created by this DDL command:
+
+  CREATE FULLTEXT INDEX [if not exists] <index-name> ON <table-name>
+    (<field-name> [ <mapping-spec> ], ...)
+
+(For an example of this command in use, see below, under EXAMPLE OF
+TEXT INDEX CREATION.)
+
+This is similar to the command that creates regular secondary indexes.
+The only syntactic difference is the addition of the optional
+<mapping-spec> clause that follows the field name.  If present,
+<mapping-spec> is a small JSON document that influences
+Elasticsearch's treatment of the field.
+
+A text index corresponds to a mapping in Elasticsearch, also known
+variously as a "type" or "document type."  It can be thought of as a
+schema for a type of document that is indexed in Elasticsearch.  When
+you create an ONDB text index, a mapping is created in Elasticsearch
+that defines the structure of the documents that will be indexed on
+behalf of the text index.  One aspect of the mapping is a list of
+fields that compose the document type, along with their types.  In the
+absence of a <mapping-spec>, ONDB will supply a default type for each
+field that corresponds to the the type of the column in the ONDB
+table.  For example, if a table column A has the type string, then the
+mapping supplied to Elasticsearch will declare a field named A of type
+string.  (While both types are named "string", they are distinct
+because they denote types in different systems.)
+
+If you wish, however, to coerce Elasticsearch to treat column A as an
+integer despite its being a string in ONDB, you would supply an
+explicit type by including a <mapping-spec> clause:
+
+  { "type" : "integer" }
+
+The <mapping-spec>, in addition to specifying the type of the field,
+can also contain any of a large set of parameters for determining how
+Elasticsearch handles the field.  For example, if you want to store
+the field, but not index it (i.e. not make it available for search),
+you would include the tuple "index" : "no".  A list of such parameters
+is available here:
+https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-params.html
+
+You may supply a <mapping-spec> that does not include the "type" key,
+and ONDB will supply the default type.
+
+Despite the possibilites offered by <mapping-spec>, let's assume
+henceforth that you want to keep things simple and just go with the
+default mapping parameters, and leave out the mapping spec.
+
+
+EXAMPLE OF TEXT INDEX CREATION
+
+
+Let's start with a joke table.  You can create a table from the CLI
+using a command like this:
+
+  kv-> execute 'CREATE TABLE Joke (id INTEGER, category STRING,
+       txt STRING, PRIMARY KEY (id))';
+
+Then the following command makes a text index on that table that
+indexes the category and txt columns:
+
+  kv-> execute 'CREATE FULLTEXT INDEX JokeIndex ON Joke (category, txt)';
+
+Now add a joke record:
+
+  kv-> put table -name Joke -json '{ "id" : 1, "category" : "pun",
+       "txt" : "You can tune a piano but you can\'t tune a fish, unless you
+        play bass" }';
+
+The putting of this record should have produced a document that was
+sent to Elasticsearch for indexing.  Let's see if we can find that
+document by searching the Elasticsearch cluster.  Assuming that the ES
+node is running locally, listening for http connections on port 9200,
+and the store name is "kvstore," the following curl command should
+produce every document that is indexed with the JokeIndex mapping:
+
+  $ curl -s localhost:9200/ondb.kvstore/JokeIndex/_search\?pretty
+  {
+    "took" : 40,
+    "timed_out" : false,
+    "_shards" : {
+      "total" : 5,
+      "successful" : 5,
+      "failed" : 0
+    },
+    "hits" : {
+      "total" : 1,
+      "max_score" : 1.0,
+      "hits" : [ {
+	"_index" : "ondb.kvstore",
+	"_type" : "JokeIndex",
+	"_id" : "/r/¨0001",
+	"_score" : 1.0,
+	"_source":{"_pkey":{"_table":"Joke","id":"1"},"category":"pun","txt":"You can tune a piano but you can't tune a fish, unless you play bass"}
+      } ]
+    }
+  }
+
+The curl command sends an http request to the ES node listening on
+port 9200. The name of the ES index container is "ondb.kvstore" which
+is a concatenation of "ondb." and the name of the store
+(lowercased). The name that we gave to the text index in the CREATE
+FULLTEXT statement was "JokeIndex" so we are restricting the search to
+the mapping associated with that text index. The mapping is
+referred to in the search results as "_type".
+
+We asked to search for every record in JokeIndex (there is no search
+term, so every record matches the search). The argument "pretty" means
+to pretty-print the output.
+
+The result contains an array of "hits" with a single member. The
+interesting property is "_source" which contains "_pkey" which has the
+table and primary key for the original kvstore record; and the two
+indexed fields "category" and "txt".
+
+You can narrow the search by putting a search term into the REST
+request, using q= like this:
+
+  $ curl -s localhost:9200/ondb.kvstore/JokeIndex/_search\?q=fish\&pretty
+
+to get the same result as above. 
+
+
+HOW TO DO IT IN JAVA
+
+
+Creating ONDB tables and populating them is described elsewhere, in
+real documentation.  To create a text index, you would use the method
+KVStore.executeSync to issue the DDL command "CREATE FULLTEXT INDEX,"
+mentioned above.  So there is not much to say here about getting data
+into the index.
+
+Searching the index, on the other hand, must be done using
+Elasticsearch APIs, with which we are not necessarily as familiar.
+Here is a very simple example of a program that searches a document
+type that corresponds to an ONDB text index.  This command, given the
+arguments "localhost 9300 kvstore JokeIndex fish" would produce
+exactly the same output as the curl command above.
+
+Note: to build and run this program, you will need all jar files
+supplied with the Elasticsearch distribution in your class path.  One
+way to achieve this would be to use the java command's class path
+wildcard feature, for example:
+
+  java -cp ".:/home/guy/elasticsearch-2.0.0/lib/*" \
+    DoSearch localhost 9300 kvstore JokeIndex fish
+
+
+import java.net.InetAddress;
+
+import org.elasticsearch.action.search.SearchRequestBuilder;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.common.transport.InetSocketTransportAddress;
+import org.elasticsearch.index.query.QueryBuilders;
+
+public class DoSearch {
+
+    public static void main(String args[]) throws Exception {
+    	
+    	if (args.length < 4 || args.length > 5) {
+            System.err.println
+                ("Usage: DoSearch <esTransportHost> <esTransportPort> " +
+                 "<kvStoreName> <indexName> [search-term]");
+    	}
+        String esTransportHost = args[0];
+        int esTransportPort = Integer.parseInt(args[1]);
+        String kvStoreName = args[2];
+        String docType = args[3];
+        String searchTerm = args.length > 4 ? args[4] : null;
+
+        TransportClient client =
+            TransportClient.builder().build();
+
+        client.addTransportAddress
+            (new InetSocketTransportAddress
+             (InetAddress.getByName(esTransportHost), esTransportPort));
+
+        final String indexName = "ondb." + kvStoreName.toLowerCase();
+            
+        SearchRequestBuilder sb = client.prepareSearch(indexName).
+            setTypes(docType);
+        if (searchTerm != null) {
+            sb.setQuery(QueryBuilders.simpleQueryStringQuery(searchTerm));
+        }
+            
+        SearchResponse response = sb.execute().actionGet();
+        System.out.println(response);
+    }
+}
+
+
+!!!CAVEATS!!!
+
+
+This snapshot pre-release is incomplete in a number of ways; here is a
+list of issues to be aware of:
+
+  1. You can't DROP INDEX on a text index.  If you need to change the
+     definition of an index, you will have to wipe the store and start
+     over from scratch.
+    
+  2. Text indexes on columns with complex types such as MAP, ARRAY,
+     and RECORD are not supported.
+
+  3. NoSQL Database elasticity operations, such as adding a SNA and
+     rebalancing the store, do not work correctly with text indexes.
+
+  4. Field name conflicts -- you can't put text indexes on two tables
+     that have columns with the same name but different types.  A fix
+     for this problem might involve mangling the field names in some way.
+
+  5. There is no way to tell Elasticsearch to use non-default values
+     for an index's shards and replicas properties.
+
+  6. The name of the mapping generated for a text index is currently
+     the same as the simple name of the index.  However, in the near
+     future, this name will be qualified by prepending the name of the
+     table the index belongs to.

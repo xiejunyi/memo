@@ -1,0 +1,20 @@
+# for c/c++
+## create index file recursively
+cscope -Rbkq
+## invoke cscope after index file is created
+cscope -R
+
+# for java
+## generate list of java files, please do it
+## before build, otherwise the java file in dist/
+## will be indexed
+find . -name "*.java" > ~/temp/cscope.files
+find . -name "*.html" >> ~/temp/cscope.files
+find . -name "*.xml" >> ~/temp/cscope.files
+
+## generate index file
+cscope -Rbkqi ~/temp/cscope.files
+## invoke cscope
+cscope -Rki ~/temp/cscope.files
+
+

@@ -1,0 +1,25 @@
+#!/bin/bash
+
+mode=devo
+#mode=prod
+
+version="3.6.1"
+export KVROOT=/home/guy/kvroot
+export KVHOST=localhost
+#export KVHOST=you.foxhillyer.org
+
+if [ $mode = "devo" ]; then
+    export KVDEV=/home/guy/wm/kv12/kvstore
+    export KVJAR=$KVDEV/dist/lib/kvstore.jar
+
+    export CLASSPATH=.:$KVJAR:$KVDEV/build/test/classes:/usr/share/java/junit.jar
+else
+    export KVDEV=/home/guy/rc$version/kv-$version
+    export KVJAR=$KVDEV/lib/kvstore.jar
+    export CLASSPATH=.:$KVJAR
+fi
+
+export PATH=$KVDEV/bin:$PATH
+export LD_LIBRARY_PATH=/usr/lib/jvm/java-7-sun/jre/lib/amd64:/usr/lib/jvm/java-7-sun/jre/lib/amd64/server
+
+$*

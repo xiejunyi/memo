@@ -1,0 +1,50 @@
+#!/bin/bash
+
+STARTPORT=5000;
+
+# sets KVROOT from kvenv's environment
+eval export `kvenv env | grep KVROOT`
+# sets KVHOST from kvenv's environment
+eval export `kvenv env | grep KVHOST`
+
+if [ "$1" = "" ]; then
+   nSNs=1;
+else
+    nSNs=$1;
+fi
+
+clear-kvroot
+
+  mgmttrapport=1024
+
+port=$STARTPORT;
+i=1
+while [ $i -le $nSNs ]; do
+  echo $i;
+
+  httpport=`expr $port + 1`
+  mgmtpollport=`expr $port + 2`
+
+  hastartport=`expr $port + 4`
+  haendport=`expr $port + 29`
+  
+#  if [ $i -eq 1 ]; then
+  if true; then
+      adminpart="-admin $httpport"
+  else
+      adminpart=""
+  fi
+
+  kvenv runjar makebootconfig -memory_mb 1024 -host $KVHOST -root $KVROOT -config config$i.xml -port $port $adminpart -harange $hastartport,$haendport -store-security none -mgmt jmx # snmp -pollport $mgmtpollport -traphost localhost -trapport $mgmttrapport -capacity 3 -num_cpus 4 -memory_mb 1000 -storagedir $HOME/kvlots
+
+  kvenv runjar start -root $KVROOT -config config$i.xml &
+
+  i=`expr $i + 1`;
+  port=`expr $port + 50`;
+done
+
+
+
+
+
+

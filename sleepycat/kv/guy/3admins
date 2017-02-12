@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# sets KVHOST from kvenv's environment
+eval export `kvenv env | grep KVHOST`
+
+kvadmin configure -name SharkTeeth
+
+# kvadmin -hidden set policy useClientSocketFactories=false
+
+kvadmin plan deploy-datacenter -name CowFord  -rf 4 -wait
+
+kvadmin plan deploy-sn -dc 1 -host $KVHOST -port 5000 -wait
+
+kvadmin plan deploy-admin -sn sn1 -port 5001 -wait
+
+kvadmin plan deploy-sn -zn zn1 -host $KVHOST -port 5050 -wait
+kvadmin plan deploy-sn -zn zn1 -host $KVHOST -port 5100 -wait
+kvadmin plan deploy-sn -zn zn1 -host $KVHOST -port 5150 -wait
+kvadmin plan deploy-sn -zn zn1 -host $KVHOST -port 5200 -wait
+#kvadmin plan deploy-sn -zn zn1 -host $KVHOST -port 5150 -wait
+#kvadmin plan deploy-sn -dc 1 -host $KVHOST -port 5050 -wait
+#kvadmin plan deploy-sn -dc 1 -host $KVHOST -port 5060 -wait
+
+
+kvadmin plan change-param -wait -service sn1 -params capacity=4
+kvadmin plan change-param -wait -service sn2 -params capacity=4
+kvadmin plan change-param -wait -service sn3 -params capacity=4
+kvadmin plan change-param -wait -service sn4 -params capacity=4
+kvadmin plan change-param -wait -service sn5 -params capacity=4
+#kvadmin plan change-param -wait -service sn6 -params capacity=4
+#kvadmin plan change-param -wait -service sn7 -params capacity=4
+
+kvadmin pool create -name avail
+kvadmin pool join -name avail -sn sn1 -sn sn2 -sn sn3 -sn sn4
+
+kvadmin topology create -name topo1 -pool avail -partitions 100
+kvadmin plan deploy-topology -name topo1 -wait
+
+kvadmin plan deploy-admin -sn sn2 -port 5031 -wait
+kvadmin plan deploy-admin -sn sn3 -port 5061 -wait
+
+

@@ -1,0 +1,7 @@
+# list all indices
+curl 'localhost:9200/_cat/indices?v'
+
+# search
+curl -s 'localhost:9200/ondb.kvstore/JokeIndex/_search\?pretty'
+
+

@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# sets KVHOST from kvenv's environment
+eval export `kvenv env | grep KVHOST`
+
+kvadmin configure -name kvstore
+
+kvadmin plan deploy-datacenter  -name yy -rf 1 -wait
+
+kvadmin plan deploy-sn -dc 1 -host $KVHOST -port 5000 -wait
+
+kvadmin plan deploy-admin -sn sn1 -port 5001 -wait
+kvadmin topology create -name foo -pool AllStorageNodes -partitions 100
+kvadmin plan deploy-topology -name foo -wait
+
+#kvadmin plan deploy-searchnode -sn sn1
+
+#kvadmin plan change-parameters -wait -service rg1-rn1 -params javaMiscParams='-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=9009'
+
+#kvadmin plan change-parameters -service admin1 -params javaMiscParams='-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=9008'
+
+#kvadmin plan execute -last
+
+kvadmin plan register-es -wait -clustername elasticsearch -host quoth -port 9300 -force
+

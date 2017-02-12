@@ -1,0 +1,34 @@
+ # register plan
+plan register-es -clustername elasticsearch -host localhost -port 9300 -force -wait
+
+# connect store
+connect store -name mystore -host localhost -port 5000
+
+# create table in kvstore
+execute 'CREATE TABLE Joke (id STRING, category STRING, txt STRING, PRIMARY KEY (id))'
+
+# create text index on the table
+execute 'CREATE FULLTEXT INDEX JokeIndex ON Joke (category, txt)'
+
+# load some data
+put table -name Joke -json '{ "id" : "1", "category" : "pun", "txt" : "You can tune a piano but you can\'t tune a fish, unless you play bass" }'
+put table -name Joke -json '{ "id" : "2", "category" : "party", "txt" : "I am thankful for the mess to clean after a party because it means I have been surrounded by friends" }'
+put table -name Joke -json '{ "id" : "3", "category" : "stupid", "txt" : "Doing nothing is hard, you never know when you are done" }'
+put table -name Joke -json '{ "id" : "4", "category" : "thoughtful", "txt" : "Do not worry if plan A fails, there are 25 more letters in the alphabet" }'
+
+#list of rows inserted
+get table -name Joke
+{"id":"4","category":"thoughtful","txt":"Do not worry if plan A fails, there are 25 more letters in the alphabet"}
+{"id":"1","category":"pun","txt":"You can tune a piano but you can't tune a fish, unless you play bass"}
+{"id":"2","category":"party","txt":"I am thankful for the mess to clean after a party because it means I have been surrounded by friends"}
+{"id":"3","category":"stupid","txt":"Doing nothing is hard, you never know when you are done"}
+
+4 rows returned
+
+#search on ES
+curl -s localhost:9200/ondb.mystore.joke.jokeindex/_search\?pretty
+
+# drop text index on the table
+execute 'DROP INDEX JokeIndex ON Joke'
+
+

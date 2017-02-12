@@ -1,0 +1,5 @@
+==== check java and JRE version ===
+java -version
+/Library/Internet\ Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin/java -version
+
+=== ===

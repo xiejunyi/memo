@@ -1,0 +1,36 @@
+## clone
+hg clone ssh://juxie@sleepycat-scm.us.oracle.com//a/hgroot/kv
+
+## remove a change-set
+hg strip -r <change-set>
+
+##------- branching --------##
+## http://stevelosh.com/blog/2009/08/a-guide-to-branching-in-mercurial/
+### use bookmark to branch
+hg bookmark main
+hg bookmark feature
+### switch
+hg update feature
+### delete
+hg bookmark -d feature
+### with named branches
+hg branch test1
+### modify code
+hg commit -m "new commit"
+hg commit --amend
+
+## commit java file only
+hg commit --amend --include "set:**.java"
+## commit all non-binary files:
+hg commit --exclude "set:binary()"
+
+### switch
+hg update test1
+
+## view previous version of file,  if no -r is provided, parent version will be viewed.
+hg cat examples/externaltables/config.xml -r 3058
+
+## use opendiff to compare
+hg cat examples/externaltables/config.xml > ~/temp/config.xml.orig
+opendiff examples/externaltables/config.xml ~/temp/config.xml.orig
+

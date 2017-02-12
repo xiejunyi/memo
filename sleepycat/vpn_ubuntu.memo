@@ -1,0 +1,17 @@
+# create VPN in Unbuntu
+
+cd /opt/cisco/
+sudo ./vpnsetup.sh
+sudo systemctl daemon-reload
+cd /opt/cisco/anyconnect/bin/
+
+# vpn cmd line
+./vpn
+
+# vpn ui
+./vpnui
+
+
+
+
+

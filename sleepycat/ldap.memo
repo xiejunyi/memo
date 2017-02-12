@@ -1,0 +1,9 @@
+## must be within VPN
+
+ldapsearch -LLL -x -h ldap.oracle.com -b dc=oracle,dc=com cn=junyi.xie
+ldapsearch -LLL -x -h ldap.oracle.com -b dc=oracle,dc=com cn=dave.rubin title
+
+ldapsearch -LLL -x -h ldap.oracle.com -b dc=oracle,dc=com cn=kvstore*
+ldapsearch -LLL -x -h ldap.oracle.com -b dc=oracle,dc=com cn=kvstore_dev* owner
+ldapsearch -LLL -x -h ldap.oracle.com -b dc=oracle,dc=com cn=bdb_core* groups
+

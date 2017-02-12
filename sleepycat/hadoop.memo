@@ -1,0 +1,25 @@
+#path to include:
+#/usr/local/Cellar/hadoop/2.4.0/bin
+#/usr/local/Cellar/hadoop/2.4.0/sbin
+
+#format HDFS
+hdfs namenode -format
+
+#modify config file in /usr/local/Cellar/hadoop/2.4.0/libexec/etc/hadoop
+-rw-r--r--  1 junyi  wheel   871 Jul  4 21:05 core-site.xml
+-rw-r--r--  1 junyi  wheel   855 Jul  4 21:06 hdfs-site.xml
+-rw-r--r--  1 junyi  wheel   854 Jul  4 21:08 mapred-site.xml
+
+#start hdfs and yarn
+start-all.sh
+#or
+start-dfs.sh
+start-yarn.sh
+
+#stop hdfs and yarn
+stop-all.sh
+#or
+stop-yarn.sh
+stop-dfs.sh
+
+#END

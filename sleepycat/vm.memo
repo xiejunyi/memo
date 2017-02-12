@@ -1,0 +1,22 @@
+# --------------------
+# VMs assigned to me:
+# --------------------
+Hostname	 adc4110608.us.oracle.com
+Pool		 Default - 6/125GiB, Austin
+Image		 Oracle Linux 6 (Intel 64-bit, Developer)
+Reservation Type	entitlement
+Expiration	2015-05-22
+Purpose		Personal entitlement
+Requested By		 junyi.xie
+Reserved By			 junyi.xie
+
+From BDB VM farm:
+slc06tyx        32GiB RAM, 6vCPU,  460 GiB Disk OL 5    reserved by Junyi       lroot/welcome1
+slc06tyy        32GiB RAM, 6vCPU,  460 GiB Disk OL 5    reserved by Junyi       lroot/welcome1
+slc06tyz        32GiB RAM, 6vCPU,  460 GiB Disk OL 5    reserved by Junyi       lroot/welcome1
+slc06tza        32GiB RAM, 6vCPU,  460 GiB Disk OL 5    reserved by Junyi       lroot/welcome1
+
+
+#Append public keys to remote from OS X
+cat ~/.ssh/id_rsa.pub | ssh juxie@slc07pnn 'cat >> ~/.ssh/authorized_keys'
+

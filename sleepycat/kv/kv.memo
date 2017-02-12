@@ -1,0 +1,28 @@
+## make bootconfig file
+java -jar $KVLIB/kvstore.jar makebootconfig -root $KVROOT -host  $HOSTNAME -port 5000 -admin 5001 -harange 5010,5025 -store-security none -capacity 3
+
+## start kvstore server
+nohup java -Xmx256m -Xms256m -jar $KVHOME/dist/lib/kvstore.jar start -root $KVROOT &
+
+
+## smoke test
+# ping the server
+java -jar $KVLIB/kvstore.jar ping -port 5000 -host localhost
+
+# toy example
+javac -jar $KVLIB/kvclient.jar $KVHOME/examples/hello/*.java
+java -cp $KVLIB/kvclient.jar:$KVHOME/examples hello.HelloBigDataWorld -host localhost -port 5000 -store mystore
+
+## run admin CLI
+java -Xmx256m -Xms256m -jar $KVLIB/kvstore.jar runadmin -port 5000 -host $HOSTNAME
+
+
+## unit test: all unit test ended with *Test.java/class
+
+### test a package of unit tests, e.g., external table
+ant test -Dtestpackage=oracle.kv.exttab
+
+### test single unit test
+ant test -Dtestcase=oracle.kv.exttab.PreprocTest
+
+## END

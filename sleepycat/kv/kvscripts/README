@@ -1,0 +1,14 @@
+# make a 1x1 kvstore
+
+rm -rf $KVROOT
+
+source /Users/junyi/work/memo/oracle/kv/kvscripts/makebootconfig_capacity1.sh
+
+nohup java -Xmx1024m -Xms256m -jar $KVLIB/kvstore.jar start -root $KVROOT &
+
+source  /Users/junyi/work/memo/oracle/kv/kvscripts/runadmin_script.sh  /Users/junyi/work/memo/oracle/kv/kvscripts/config_1x1
+
+
+
+
+

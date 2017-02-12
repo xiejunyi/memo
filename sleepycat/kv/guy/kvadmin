@@ -1,0 +1,5 @@
+#!/bin/bash
+
+kvenv runjar runadmin -host localhost -port 5000  -store kvstore $*
+# -security /home/guy/kvlots/security/client.security $*
+

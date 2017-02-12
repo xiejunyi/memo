@@ -1,0 +1,21 @@
+### configure a 1x1 store ###
+
+## first modify makebootconfig to change capacity to 1! ##
+
+configure -name mystore
+plan deploy-zone -name "HPN" -rf 1 -wait
+## add first sn
+plan deploy-sn -zn zn1 -host localhost -port 5000 -wait
+## add admin service
+plan deploy-admin -sn sn1 -port 5001 -wait
+
+## creat pool and sns to pool
+pool create -name Pool
+pool join -name Pool -sn sn1
+
+## create topology and deploy it
+topology create -name topo -pool Pool -partitions 8
+plan deploy-topology -name topo -wait
+
+### End Script ###
+
